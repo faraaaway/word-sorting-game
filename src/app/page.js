@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
-// (CSS는 생략되었습니다)
 
-// 2. 데이터 구조
+// 2. 데이터 구
 const gameData = [
   {
     category: "포유류",
-    options: ["개", "참새", "고s양이", "상어", "침팬치"],
+    options: ["개", "참새", "고양이", "상어", "침팬치"],
     answers: ["개", "고양이", "침팬치"],
   },
   {
@@ -66,7 +65,7 @@ function App() {
   };
 
   return (
-    <div className="game-app">
+    <div className="flex justify-center">
       {showResult ? (
         // 4. 결과 표시
         <div className="result-screen">

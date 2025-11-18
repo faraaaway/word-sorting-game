@@ -1,0 +1,4 @@
+{
+  "css.enabledLanguages": ["html"],
+  "css.styleSheets": ["src/**/*.css"]
+}
