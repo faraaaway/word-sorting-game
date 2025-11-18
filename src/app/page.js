@@ -1,65 +1,111 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from "react";
+// (CSS는 생략되었습니다)
 
-export default function Home() {
+// 2. 데이터 구조
+const gameData = [
+  {
+    category: "포유류",
+    options: ["개", "참새", "고s양이", "상어", "침팬치"],
+    answers: ["개", "고양이", "침팬치"],
+  },
+  {
+    category: "과일",
+    options: ["사과", "당근", "바나나", "오이"],
+    answers: ["사과", "바나나"],
+  },
+];
+
+function App() {
+  // 3. 상태 관리
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  const currentQuestion = gameData[currentQuestionIndex];
+
+  // 4. 로직 (선택 처리)
+  const handleOptionClick = (option) => {
+    setSelectedAnswers((prev) => {
+      if (prev.includes(option)) {
+        // 이미 선택했다면 제거
+        return prev.filter((item) => item !== option);
+      } else {
+        // 새로 선택했다면 추가
+        return [...prev, option];
+      }
+    });
+  };
+
+  // 4. 로직 (제출 및 다음 문제)
+  const handleSubmit = () => {
+    const correctAnswers = currentQuestion.answers;
+    let currentScore = 0;
+
+    // 채점 로직 (예: 정답 맞추면 +1, 틀린거 고르면 -1)
+    selectedAnswers.forEach((answer) => {
+      if (correctAnswers.includes(answer)) {
+        currentScore++;
+      } else {
+        currentScore--;
+      }
+    });
+
+    setScore(score + currentScore); // 총점 업데이트
+    setSelectedAnswers([]); // 선택 초기화
+
+    // 다음 문제로 이동
+    const nextQuestionIndex = currentQuestionIndex + 1;
+    if (nextQuestionIndex < gameData.length) {
+      setCurrentQuestionIndex(nextQuestionIndex);
+    } else {
+      // 게임 종료
+      setShowResult(true);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="game-app">
+      {showResult ? (
+        // 4. 결과 표시
+        <div className="result-screen">
+          <h2>게임 종료!</h2>
+          <p>당신의 총점은 {score}점입니다.</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      ) : (
+        // 1. 문제 표시
+        <div className="question-area">
+          {/* Question 컴포넌트 역할 */}
+          <h2>제시어: {currentQuestion.category}</h2>
+
+          {/* Options 컴포넌트 역할 */}
+          <div className="options-grid">
+            {currentQuestion.options.map((option, idx) => (
+              <p key={idx}>
+                <button
+                  key={option}
+                  // 선택된 버튼은 스타일 다르게 (예: 'selected' 클래스)
+                  className={
+                    selectedAnswers.includes(option)
+                      ? "bg-blue-400"
+                      : "bg-white"
+                  }
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {option}
+                </button>
+              </p>
+            ))}
+          </div>
+
+          <button onClick={handleSubmit} className="submit-button">
+            제출하기
+          </button>
         </div>
-      </main>
+      )}
     </div>
   );
 }
+
+export default App;
