@@ -5,12 +5,12 @@ import React, { useState } from "react";
 const gameData = [
   {
     category: "포유류",
-    options: ["개", "참새", "고양이", "상어", "침팬치"],
+    options: ["개", "참새", "고양이", "상어", "침팬치", "도마뱀"],
     answers: ["개", "고양이", "침팬치"],
   },
   {
     category: "과일",
-    options: ["사과", "당근", "바나나", "오이"],
+    options: ["사과", "당근", "바나나", "오이", "가지"],
     answers: ["사과", "바나나"],
   },
 ];
@@ -107,7 +107,7 @@ function App() {
           <div className="flex  justify-center">
             <button
               onClick={handleSubmit}
-              className="mx-2 px-3 py-2 text-4xl rounded border bg-white"
+              className="bg-white mx-2 px-3 py-2 text-4xl rounded border "
             >
               제출하기
             </button>
