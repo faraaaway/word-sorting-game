@@ -73,23 +73,29 @@ function App() {
           <p>당신의 총점은 {score}점입니다.</p>
         </div>
       ) : (
-        // 1. 문제 표시
-        <div className="question-area">
-          {/* Question 컴포넌트 역할 */}
-          <h2>제시어: {currentQuestion.category}</h2>
+        // 1. 문제 카드, 제시어, 제출 버튼 담는 컨테이너
+        <div>
+          {/* 문제 카드 컴포넌트 역할 */}
+          <div className="flex  justify-center">
+            <div className="bg-white rounded-4xl border-4 my-10 text-6xl text-center font-semibold w-[21rem] h-[32rem] content-center">
+              <h2>{currentQuestion.category}</h2>
+            </div>
+          </div>
 
-          {/* Options 컴포넌트 역할 */}
-          <div className="options-grid">
+          {/* 제시어 선택 컴포넌트 역할 */}
+          <div className="flex flex-row my-5 justify-center">
             {currentQuestion.options.map((option, idx) => (
-              <p key={idx}>
+              //각각의 제시어
+              <p
+                key={idx}
+                className={`${
+                  selectedAnswers.includes(option) ? "bg-green-400" : "bg-white"
+                } mx-2 px-4 py-1 text-4xl rounded-4xl border-3`}
+              >
                 <button
                   key={option}
                   // 선택된 버튼은 스타일 다르게 (예: 'selected' 클래스)
-                  className={
-                    selectedAnswers.includes(option)
-                      ? "bg-blue-400"
-                      : "bg-white"
-                  }
+
                   onClick={() => handleOptionClick(option)}
                 >
                   {option}
@@ -98,9 +104,14 @@ function App() {
             ))}
           </div>
 
-          <button onClick={handleSubmit} className="submit-button">
-            제출하기
-          </button>
+          <div className="flex  justify-center">
+            <button
+              onClick={handleSubmit}
+              className="mx-2 px-3 py-2 text-4xl rounded border bg-white"
+            >
+              제출하기
+            </button>
+          </div>
         </div>
       )}
     </div>
